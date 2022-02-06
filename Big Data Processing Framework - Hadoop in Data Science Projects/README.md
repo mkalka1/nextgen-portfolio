@@ -1,1 +1,1 @@
-
+The paper and poster were created to focus on utilization of Hadoop as big data processing platform and how it is sacrosanct in delivering Data Science projects. Hadoop’s data operations and open sourced collaborative platform has led to its popularity as processor for large datasets leveraging distributed computing efficiencies where large data sets across high latency and availability clusters get distributed across multiple servers, process queries calculating partial results from each server, and then merge these partial results to generate aggregated response.

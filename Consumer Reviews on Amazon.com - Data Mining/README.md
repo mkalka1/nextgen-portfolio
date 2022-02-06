@@ -1,1 +1,1 @@
-
+Data Mining of 28332 reviews from Amazon.com across six products was carried out with an objective to predict the overall rating of the Consumer Reviews based on the outcome of the model evaluation and the results of the performance metric.

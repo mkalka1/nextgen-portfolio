@@ -1,1 +1,1 @@
-
+Computer performance, reliability, and scalability calculation was carried out based on the static image file size, video files uploaded on YouTube, Twitter, and other Social Media platforms. At the end, latency rate was calculated within Geo space based on the data packets transmitted over the internet.

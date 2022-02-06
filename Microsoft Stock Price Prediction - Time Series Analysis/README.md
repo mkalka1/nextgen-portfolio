@@ -1,1 +1,1 @@
-
+Predicting how the stock market will perform is very difficult. There are many influential factors involved in the prediction, for example psychological, rational, and irrational behavior etc. All these factors make stock prices very difficult to predict with a high accuracy. Our objective was to perform Time Series Analysis by leveraging machine learning techniques, which have the potential to look into patterns of data to make accurate predictions for Microsoft Stock Price.

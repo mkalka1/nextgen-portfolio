@@ -1,1 +1,1 @@
-
+The Aviation Safety Network’s database categorizes fatal flight accidents of commercial airlines per the data. Two hundred forty fatal instructional accidents in piston engine airplanes from 2000 through 2015 were analyzed. It was found that the greatest risks in flight were loss of control inflight (54%) and midair collisions (10%). The overall accident rate decreased 35% from 2000 through 2015. Flight training is gradually becoming safer; however, there is still room for continuous improvement. 

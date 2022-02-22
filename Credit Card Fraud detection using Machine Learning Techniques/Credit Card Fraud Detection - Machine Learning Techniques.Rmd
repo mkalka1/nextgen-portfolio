@@ -1,0 +1,390 @@
+---
+title: "10.1 Final Project Step 3: Final Project Submission"
+author: "Kalkar, Manish"
+date: August 6, 2020
+output:
+
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r include = FALSE}
+
+## Inline Code
+
+## Load the packages
+library(ggplot2)
+library(class)
+library(pROC)
+library(QuantPsyc)
+
+## Set the working directory to the root of your DSC 520 directory
+setwd("C:/Users/msupn/OneDrive/Documents/MS-DS/DSC520 - Statistics for Data Science/Github Repository/dsc520")
+
+## Load the `data/creditcard.csv` to `creditcard_df`
+creditcard_df <- read.csv("data/creditcard.csv")
+
+```
+
+
+## Overall, write a coherent narrative that tells a story with the data as you complete this section.
+
+# Introduction
+
+The data set is retrieved from Kaggle - https://www.kaggle.com/mlg-ulb/creditcardfraud
+
+The data set contains transactions made by credit cards in September 2013 by European cardholders. According to creditcards.com, in UK alone, there was over £300m in fraudulent credit card transactions in the first half of 2016, with banks preventing over £470m of fraud in the same period. The data shows that credit card fraud is rising, so there was an urgent need to develop new, and improve current, fraud detection methods.
+
+The dataset has been collected and analyzed during a research collaboration of Worldline and the Machine Learning Group of ULB (University of Libre de Bruxelles) on big data mining and fraud detection. To preserve anonymity, these data have been transformed using principal components analysis.
+
+# Data Description
+
+This dataset presents transactions that occurred in two days, where we have 492 frauds out of 284,807 transactions. It contains only numerical input variables which are the result of a PCA transformation. Due to confidentiality issues, there are not provided the original features and more background information about the data.
+
+* Variables V1 to V28 are the principal components obtained with PCA.
+* The only variables which have not been transformed with PCA are Time and Amount. Variable Time contains the time in seconds elapsed between each transaction and the first transaction in the dataset.
+* The variable Amount is the transaction Amount.
+* Variable Class is the response variable and it has the values as below:
+* 1 - Fraudulent Transaction
+* 0 - Non-fraudulent Transaction
+
+## Summarize the problem statement you addressed.
+
+Credit card fraud is a major concern in the financial industry nowadays. With the growth of e-commerce websites, people and financial companies rely on online services to carry out their transactions that have led to an exponential increase in the credit card frauds. The Credit Card Fraud Detection Problem includes modeling past credit card transactions with the knowledge of the ones that turned out to be fraud. The design of an effective fraud detection system is necessary to reduce the losses incurred by the customers and financial companies.
+
+## Summarize how you addressed this problem statement (the data used and the methodology employed).
+
+Following methodologies were employed to address the problem statement:
+
+# Machine Learning Technique
+
+Using this dataset, we used machine learning technique to develop models that attempt to predict whether a transaction is fraudulent. Following models have been developed and applied to the data set:
+
+* Logistic Regression
+* ROC Curve for Logistic Regression
+* K Nearest Neighbor Algorithm
+
+We observed the accuracy of above models to see which one fits the best to predict the fraudulent transaction.
+
+# Anomaly Detection Technique
+
+Detecting anomalies is nothing but to identify irregularities in data is to flag the data points that deviate from common statistical properties of a distribution. We relied on visual representation by plotting below:
+
+* Residuals vs Predicted Values
+* Normal Q-Q Plot
+* Standardized Residuals vs Predicted Value
+* Residuals vs Leverage
+
+## Summarize the interesting insights that your analysis provided.
+
+# Analyze the need for Data Cleaning
+
+# Sensitive data
+
+The data set consists of numerical values from the 28 ‘Principal Component Analysis (PCA)’ transformed features. Due to confidentiality issues, the original features and more background information about the data could not be provided.
+
+# Consistency in Variables Names
+\
+```{r }
+
+## Display Variable Names
+
+names(creditcard_df)
+
+```
+
+
+All variable names are precise and as expected.
+
+
+# Missing / Null observations in the data set
+\
+```{r }
+
+## Check missing values in each variable
+
+colMeans(is.na(creditcard_df))
+
+```
+
+
+There are no missing values in the data set.
+
+# Data Cleaning
+
+The data set is already fairly clean. No need to do any further cleaning.
+
+# Data Exploration / Data Analysis
+
+# Display Data set
+\
+```{r }
+
+## Display first 5 rows of the data set
+head(creditcard_df,5)
+
+```
+
+
+# Fraudulent vs Non-fraudulent Transactions
+\
+```{r }
+
+table(creditcard_df$Class)
+
+```
+
+
+There are only 492 fraudulent transactions vs 284315 non-fraudulent transactions.
+
+# % Fraudulent Transactions
+\
+```{r }
+
+TransactionCount <- as.numeric(table(creditcard_df$Class)) 
+TransactionCount
+
+percentTransactions <- TransactionCount / sum(TransactionCount)
+percentTransactions
+
+```
+
+
+There are only 0.172% Fraudulent Transactions vs 99.82% Non-fraudulent Transactions. Only 0.172% Fraudulent Transaction shows that the data is highly Unbalanced.
+
+# Plot - Number of Non-fraudulent vs Fraudulent Transactions
+\
+```{r }
+
+ggplot(creditcard_df, aes(x = Class)) + geom_bar() + ggtitle("Number of Non-fraudulent vs Fraudulent Transactions")
+
+```
+
+Above plot shows that the data set is highly unbalanced.
+
+# Summary of the Data set
+\
+```{r }
+
+# Display summary of the data set
+summary(creditcard_df)
+
+```
+
+Summary of the data set shows all the PCA transformed variables V1 to V28 have already been normalized with mean 0.
+
+
+# Plot - Distribution of Transaction Amount by Class
+\
+```{r }
+
+ggplot(creditcard_df, aes(x = Class, y = Amount)) + xlim("-0.5", "1.5") + geom_boxplot() + ggtitle("Distribution of Transaction Amount by Class")
+
+```
+
+Distribution of Transaction Amount by Class above shows lot more variability in the transaction values for non-fraudulent transactions than the fraudulent ones. In addition, Amount variable is important in predicting whether a transaction was fraudulent. 
+
+# Determine mean for fraudulent transactions vs Non-fraudulent transactions
+\
+```{r }
+
+aggregate(creditcard_df$Amount, by=list(creditcard_df$Class), FUN=mean)
+
+```
+
+Above matrix shows the mean for fraudulent transactions is more and that the problem is critical and need to be resolved.
+
+# Data Split
+
+The data set has been divided into two main groups. One for training the model and the other for Testing our trained model’s performance. The data set has been split with the split ratio of 0.80. This means that 80% of the data was attributed to the train data whereas 20% was attributed to the test data.
+
+The train and test data sets were then utilized in building the data models.
+\
+```{r }
+
+## Data Split
+
+set.seed(100)
+
+# Split data set into train and test data set and separate out predictor from cl 
+random_df <- sample(1:nrow(creditcard_df), 0.8 * nrow(creditcard_df))
+
+# Train Data set
+train_df <- creditcard_df[random_df,]
+
+# Test Data set
+test_df <- creditcard_df[-random_df,]
+
+# Original Data set
+table(creditcard_df$Class)
+
+## Train Data set - 80%
+table(train_df$Class)
+
+## Test Data set - 20%
+table(test_df$Class)
+
+```
+
+* 0 represents Non-fraudulent Transactions
+* 1 represents Fraudulent Transactions
+
+# Data Model
+
+# Logistic Regression
+
+# Fit the logistic regression model to the data set that predicts the fraudulent transaction
+
+Logistic regression is used for modeling the outcome probability of a class – fraud vs not fraud.
+\
+```{r }
+
+creditcard_glm <- glm(Class ~ Time + V1 + V2 + V3 + V4 + V5 + V6 + V7 + V8 + V9 + V10 + 
+                   V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + V20 + V21 + 
+                   V22 + V23 + V24 + V25 + V26 + V27 + V28 + Amount, data = train_df, family = "binomial")
+
+## Include a summary using the summary() function in your results
+summary(creditcard_glm)
+
+## Calculate Predicted Probability
+creditcard_predicted_probability = predict(creditcard_glm, test_df, type = "response")
+
+## Calculate and build the Confusion Matrix
+confusion_matrix <- table(Actual_Value = test_df$Class, Predicted_Value = creditcard_predicted_probability > 0.5)
+
+## Calculate the Accuracy of the model
+accuracy = (confusion_matrix[[1,1]] + confusion_matrix[[2,2]])/sum(confusion_matrix) * 100
+accuracy
+
+```
+
+The accuracy of fitting the Logistic Regression Model is 99.92%.
+
+# Visual representation - Plotting the Logistic Regression
+
+# Compute the Casewise diagnostics to identify outliers and/or influential cases
+\
+```{r }
+
+## casewise diagnostics to identify outliers and/or influential cases
+creditcard_DataFrame <- as.data.frame(resid(creditcard_glm))
+creditcard_DataFrame$residuals <- resid(creditcard_glm)
+creditcard_DataFrame$standardized.residuals <- rstandard(creditcard_glm)
+creditcard_DataFrame$studentized.residuals <- rstudent(creditcard_glm)
+creditcard_DataFrame$cooks.distance <- cooks.distance(creditcard_glm)
+creditcard_DataFrame$dfbeta <- dfbeta(creditcard_glm)
+creditcard_DataFrame$dffit <- dffits(creditcard_glm)
+creditcard_DataFrame$leverage <- hatvalues(creditcard_glm)
+creditcard_DataFrame$covariance.ratios <- covratio(creditcard_glm)
+
+```
+\
+
+# Plot - Residual Vs Predicted (Fitted) Value
+\
+```{r }
+
+plot(dffits(creditcard_glm), resid(creditcard_glm), xlim=c(-40, 40), xlab = "Predicted (Fitted) Value", ylab = "Residual", main="Residual Vs Predicted (Fitted) Value")
+
+```
+
+# Plot - qq Plot
+\
+```{r }
+
+qqplot(dffits(creditcard_glm), rstandard(creditcard_glm), xlim=c(-40, 40), xlab = "Predicted (Fitted) Value", ylab = "Standardized Residual", main="qq Plot")
+
+```
+
+# Plot - Standardized Residual Vs Predicted (Fitted) Value
+\
+```{r }
+
+plot(dffits(creditcard_glm), rstandard(creditcard_glm), xlim=c(-40, 40), xlab = "Predicted (Fitted) Value", ylab = "Standardized Residual", main="Standardized Residual Vs Predicted (Fitted) Value")
+
+```
+
+# Plot - Residual Vs Leverage
+\
+```{r }
+
+plot(hatvalues(creditcard_glm), resid(creditcard_glm), xlim=c(-40, 40), xlab = "Leverage", ylab = "Residual", main="Residual Vs Leverage")
+
+```
+
+We can clearly notice the outliers / anomalies representing the Fraudulent Transaction.
+
+# Plot ROC Curve
+
+Next, we will plot our ROC curve to further assess the performance of our model.
+\
+```{r }
+
+## Plot ROC Curve
+creditcard_predict_ROC <- predict(creditcard_glm, test_df, probability = TRUE)
+creditcard_auc_ROC = roc(test_df$Class, creditcard_predict_ROC, plot = TRUE, col = "blue")
+creditcard_auc_ROC
+
+```
+\
+The accuracy of the model by plotting the ROC is 96.79%. The accuracy seem much more desirable, especially when the data set is highly unbalanced.
+
+
+# K Nearest Neighbor Algorithm
+\
+```{r }
+
+## Target data set
+target_df<- creditcard_df[random_df,31]
+target_test_df <- creditcard_df[-random_df,31]
+
+```
+
+# Build nearest neighbors model
+\
+```{r }
+
+# Let's build the nearest neighbor model based on k value = 1
+prediction_model_k1 <- knn(train_df, test_df, cl= target_df, k = 1)
+
+# confusion Matrix for k=1
+knn_confusion_matrix_k1 <- table(prediction_model_k1, target_test_df)
+
+## Calculate the Accuracy of the model for k=1
+accuracy_k1 = (knn_confusion_matrix_k1[[1,1]])/sum(knn_confusion_matrix_k1) * 100
+accuracy_k1
+
+```
+
+The accuracy of fitting the K Nearest Neighbor Algorithm is 99.78%.
+
+## Conclusion
+
+We used various Machine Learning Techniques as well as Anomaly Detection Techniques through visual representation by plotting graphs. Based on all the models applied to the data set, below is the accuracy of each model:
+
+* Logistic Regression - 99.92%
+* ROC Curve applied to Logistic Regression - 96.79%
+* K Nearest Neighbor (KNN) Algorithm - 99.78%
+
+It has been observed that shown Logistic Regression model provide good results. K Nearest Neighbors algorithm provides higher accuracy as well. However, KNN is relatively sluggish in obtaining the desired results. Applying ROC CUrve to the Logistic Regression model provided the most desired result, especially looking at highly unbalanced data set.
+
+## Summarize the implications to the consumer (target audience) of your analysis.
+
+Based on this analysis, various data models have been developed. Ultimately by utilizing the model that best fit the data set, credit card companies should be able to recognize fraudulent credit card transactions so that customers are not charged for items that they did not purchase. The goal here was to detect 100% of the fraudulent transactions while minimizing the incorrect fraud classifications.
+
+## Discuss the limitations of your analysis and how you, or someone else, could improve or build on it.
+
+Somebody could have developed additional types of models such as Decision Tree and / or Random Forest Models by analyzing the data further in order to achieve more realistic accuracy of the model for such highly unbalanced data set.
+
+## References
+
+* Data set retrieved from Kaggle - https://www.kaggle.com/mlg-ulb/creditcardfraud
+* Anomaly Detection - Credit Card Fraud Analysis By Pavan Sanagapati. https://www.kaggle.com/pavansanagapati/anomaly-detection-credit-card-fraud-analysis
+* Predicting fraudulent credit card transactions. By Chris Bow. https://www.kaggle.com/chrisbow/credit-card-fraud-prediction-in-r
+* Credit Card Fraud Detection Predictive Models. By Gabriel Preda. https://www.kaggle.com/gpreda/credit-card-fraud-detection-predictive-models
+* Discovering Statistics Using R.  Sage Publications, 2012.
+
